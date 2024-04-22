@@ -1,3 +1,10 @@
+CREATE TABLE AUTHOR
+(
+  AuthorID INT NOT NULL,
+  AuthorName CHAR(100) NOT NULL,
+  PRIMARY KEY (AuthorID)
+);
+
 CREATE TABLE BOOK
 (
   BookID INT NOT NULL,
@@ -7,13 +14,6 @@ CREATE TABLE BOOK
   ISBN INT NOT NULL,
   NumberOfBooks INT NOT NULL,
   PRIMARY KEY (BookID)
-);
-
-CREATE TABLE AUTHOR
-(
-  AuthorID INT NOT NULL,
-  AuthorName CHAR(100) NOT NULL,
-  PRIMARY KEY (AuthorID)
 );
 
 CREATE TABLE STORE
@@ -72,11 +72,8 @@ CREATE TABLE Inventory
    FOREIGN KEY (BookID) REFERENCES BOOK(BookID)
 );
 
-
-
-
 COPY AUTHOR(AuthorID, AuthorName)
-FROM "C:\AUTHOR.xlsx"
+FROM 'C:\AUTHOR.xlsx'
 WITH (FORMAT XLSX, HEADER true);
 
 COPY BOOK(BookID, BookName, Genre, DateOfPublication, ISBN, NumberOfBooks)
@@ -86,6 +83,7 @@ WITH (FORMAT CSV, HEADER true);
 COPY CUSTOMER(CustomerID, CustomerName)
 FROM 'C:\CUSTOMER.csv'
 WITH (FORMAT CSV, HEADER true);
+
 COPY STORE(StoreID, City, State)
 FROM 'C:\STORE.csv'
 WITH (FORMAT CSV, HEADER true);
@@ -93,7 +91,6 @@ WITH (FORMAT CSV, HEADER true);
 COPY EMPLOYEE(EmployeeID, EmployeeName, NumOfHrsWrkd, StoreID)
 FROM 'C:\EMPLOYEE.csv'
 WITH (FORMAT CSV, HEADER true);
-
 
 COPY TRANSACTION(TransactionID, Amount, EmployeeID, CustomerID, BookID)
 FROM 'C:\TRANSACTION.csv'
@@ -109,11 +106,10 @@ SELECT
     C.CustomerName,
     T.BookID,
     B.BookName
-
 FROM
     TRANSACTION AS T
     JOIN EMPLOYEE AS E ON T.EmployeeID = E.EmployeeID
-    JOIN CUSTOMERS AS C ON T.CustomerID = C.CustomerID
+    JOIN CUSTOMER AS C ON T.CustomerID = C.CustomerID
     JOIN BOOK AS B ON T.BookID = B.BookID;
 
 CREATE VIEW EmployeeHours AS
@@ -136,9 +132,3 @@ SELECT
 FROM
     Inventory AS I
     JOIN BOOK AS B ON I.BookID = B.BookID;
-
-
-
-
-
-
