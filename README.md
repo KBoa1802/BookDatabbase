@@ -1,5 +1,5 @@
-# BookDatabbase
-Bookstore Database Project
+# Bookstore Database Project
+
 This is a sample database project for a bookstore. It includes tables for books, authors, stores, employees, customers, transactions, writes (which establishes the relationship between books and authors), and inventory.
 
 Tables
