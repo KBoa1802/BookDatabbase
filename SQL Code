@@ -67,8 +67,74 @@ CREATE TABLE Inventory
 (
    StoreID INT NOT NULL,
    BookID INT NOT NULL,
-   NumberOfBooks INT NOT NULL,
    PRIMARY KEY (StoreID, BookID),
    FOREIGN KEY (StoreID) REFERENCES STORE(StoreID),
    FOREIGN KEY (BookID) REFERENCES BOOK(BookID)
 );
+
+
+
+COPY AUTHOR(AuthorID, AuthorName)
+FROM "C:\AUTHOR.xlsx"
+WITH (FORMAT XLSX, HEADER true);
+
+COPY BOOK(BookID, BookName, Genre, DateOfPublication, ISBN, NumberOfBooks)
+FROM 'C:\BOOK.csv'
+WITH (FORMAT CSV, HEADER true);
+
+COPY CUSTOMER(CustomerID, CustomerName)
+FROM 'C:\CUSTOMER.csv'
+WITH (FORMAT CSV, HEADER true);
+
+COPY STORE(StoreID, City, State)
+FROM 'C:\STORE.csv'
+WITH (FORMAT CSV, HEADER true);
+
+COPY EMPLOYEE(EmployeeID, EmployeeName, NumOfHrsWrkd, StoreID)
+FROM 'C:\EMPLOYEE.csv'
+WITH (FORMAT CSV, HEADER true);
+
+COPY TRANSACTION(TransactionID, Amount, EmployeeID, CustomerID, BookID)
+FROM 'C:\TRANSACTION.csv'
+WITH (FORMAT CSV, HEADER true);
+
+CREATE VIEW TransactionDetails AS
+SELECT
+    T.TransactionID,
+    T.Amount,
+    T.EmployeeID,
+    E.EmployeeName,
+    T.CustomerID,
+    C.CustomerName,
+    T.BookID,
+    B.BookName,
+    B.AuthorID,
+    A.AuthorName
+FROM
+    TRANSACTION AS T
+    JOIN EMPLOYEE AS E ON T.EmployeeID = E.EmployeeID
+    JOIN CUSTOMERS AS C ON T.CustomerID = C.CustomerID
+    JOIN BOOK AS B ON T.BookID = B.BookID
+    JOIN AUTHOR AS A ON B.AuthorID = A.AuthorID;
+
+CREATE VIEW EmployeeHours AS
+SELECT
+    E.EmployeeID,
+    E.EmployeeName,
+    E.StoreID,
+    S.City,
+    S.State
+FROM
+    EMPLOYEE AS E
+    JOIN STORE AS S ON E.StoreID = S.StoreID;
+
+CREATE VIEW Inventory AS
+SELECT
+    I.StoreID,
+    I.BookID,
+    B.BookName,
+    B.NumberOfBooks
+FROM
+    Inventory AS I
+    JOIN BOOK AS B ON I.BookID = B.BookID;
+
