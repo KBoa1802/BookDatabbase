@@ -74,6 +74,7 @@ CREATE TABLE Inventory
 
 
 
+
 COPY AUTHOR(AuthorID, AuthorName)
 FROM "C:\AUTHOR.xlsx"
 WITH (FORMAT XLSX, HEADER true);
@@ -85,7 +86,6 @@ WITH (FORMAT CSV, HEADER true);
 COPY CUSTOMER(CustomerID, CustomerName)
 FROM 'C:\CUSTOMER.csv'
 WITH (FORMAT CSV, HEADER true);
-
 COPY STORE(StoreID, City, State)
 FROM 'C:\STORE.csv'
 WITH (FORMAT CSV, HEADER true);
@@ -93,6 +93,7 @@ WITH (FORMAT CSV, HEADER true);
 COPY EMPLOYEE(EmployeeID, EmployeeName, NumOfHrsWrkd, StoreID)
 FROM 'C:\EMPLOYEE.csv'
 WITH (FORMAT CSV, HEADER true);
+
 
 COPY TRANSACTION(TransactionID, Amount, EmployeeID, CustomerID, BookID)
 FROM 'C:\TRANSACTION.csv'
@@ -107,15 +108,13 @@ SELECT
     T.CustomerID,
     C.CustomerName,
     T.BookID,
-    B.BookName,
-    B.AuthorID,
-    A.AuthorName
+    B.BookName
+
 FROM
     TRANSACTION AS T
     JOIN EMPLOYEE AS E ON T.EmployeeID = E.EmployeeID
     JOIN CUSTOMERS AS C ON T.CustomerID = C.CustomerID
-    JOIN BOOK AS B ON T.BookID = B.BookID
-    JOIN AUTHOR AS A ON B.AuthorID = A.AuthorID;
+    JOIN BOOK AS B ON T.BookID = B.BookID;
 
 CREATE VIEW EmployeeHours AS
 SELECT
@@ -128,7 +127,7 @@ FROM
     EMPLOYEE AS E
     JOIN STORE AS S ON E.StoreID = S.StoreID;
 
-CREATE VIEW Inventory AS
+CREATE VIEW Backlog AS
 SELECT
     I.StoreID,
     I.BookID,
@@ -137,4 +136,9 @@ SELECT
 FROM
     Inventory AS I
     JOIN BOOK AS B ON I.BookID = B.BookID;
+
+
+
+
+
 
